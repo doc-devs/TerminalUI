@@ -3,7 +3,7 @@
 const axios = require('axios');
 const getUserCredentials = require('./getUserCredentials');
 const { nurseQuestions } = require('./nurseQuestions');
-const welcome2 = require('./welcome2');
+const welcome2 = require('./welcome');
 
 async function signIn(obj) {
   console.log('\nfetching credentials ...')
@@ -24,7 +24,6 @@ async function signIn(obj) {
       }
       else {
         console.log('Invalid login. Try again.')
-        // welcome2();
         getUserCredentials()
       }
     })
@@ -46,13 +45,12 @@ async function signUp(obj) {
     .then(function (response) {
 
       if (response.data) {
-        console.log(`\n Login is successful. You're signed in as: ${response.data.user.jobDescription}\n`)
+        console.log(`\n Login Successful. You're signed in as: ${response.data.user.jobDescription}\n`)
         nurseQuestions()
       }
       else return '\nError singing up\n'
     });
 
-  //end
 }
 
 module.exports = { signIn, signUp }

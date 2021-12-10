@@ -1,7 +1,5 @@
 'use strict';
 
-// WELCOME VERSION 2 using readline-sync
-
 const getUserCredentials = require('./getUserCredentials');
 const createUserCredentials = require('./createUserCredentials');
 
@@ -9,7 +7,7 @@ console.log("\nWelcome to iCare Queue Managemant System")
 
 const welcome = () => {
   new Promise((resolve) => {
-    rl.question('\nPress 1 or 2 and then Enter to access iCare\nOr press 3 to exit \n\n[1] - sign in\n[2] - sign up\n[3] - exit', (answer) => {
+    rl.question('\nPress 1 or 2 and then Enter to access iCare\nOr press 3 to exit \n\n[1] - sign in\n[2] - sign up\n[3] - exit\n', (answer) => {
       resolve(answer);
     })
   }).then((data) => {
