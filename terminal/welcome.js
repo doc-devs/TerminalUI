@@ -3,7 +3,7 @@
 const getUserCredentials = require('./getUserCredentials');
 const createUserCredentials = require('./createUserCredentials');
 
-console.log("\nWelcome to iCare Queue Managemant System")
+console.log('\n\x1b[47m\x1b[31m  Welcome to iCare Queue Management System  \x1b[0m')
 
 const welcome = () => {
   new Promise((resolve) => {

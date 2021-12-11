@@ -5,9 +5,9 @@ const getUserCredentials = require('./getUserCredentials');
 const { nurseQuestions } = require('./nurseQuestions');
 const welcome2 = require('./welcome');
 
-async function signIn(obj) {
+function signIn(obj) {
   console.log('\nfetching credentials ...')
-  await axios({
+  axios({
     method: 'post',
     url: 'https://ii-care.herokuapp.com/signin',
     responseType: 'json',
@@ -27,11 +27,14 @@ async function signIn(obj) {
         getUserCredentials()
       }
     })
+    .catch(e => {
+      console.log(e)
+    })
 }
 
-async function signUp(obj) {
+function signUp(obj) {
   console.log('creating credentials ...')
-  await axios({
+  axios({
     method: 'post',
     url: 'https://ii-care.herokuapp.com/signup',
     responseType: 'json',
