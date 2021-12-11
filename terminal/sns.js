@@ -1,7 +1,23 @@
 'use strict';
+const path = require('path');
+
+const dotenvAbsolutePath = path.join(__dirname, '../.env');
+
+const dotenv = require('dotenv').config({
+  path: dotenvAbsolutePath
+});
+if (dotenv.error) {
+  throw dotenv.error;
+}
+
 const AWS = require('aws-sdk');
 const { nurseOptions } = require('./nurseOptions');
-AWS.config.update({ region: 'us-west-2' });
+
+AWS.config.update({
+  region: process.env.AWS_REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
 const sns = new AWS.SNS();
 
 const publish = async (topic, ptInfo) => {
@@ -17,10 +33,10 @@ const publish = async (topic, ptInfo) => {
       console.log('\nPatient added successfully\n');
       rl.emit('repeat-questions');
     })
-    .catch( () => {
+    .catch((e) => {
       console.log('Could not add patient, please try again')
       rl.emit('repeat-questions-failed-attempt');
-      console.error()
+      console.error(e)
     });
 
 }
@@ -29,7 +45,7 @@ rl.on('repeat-questions', () => {
   nurseOptions();
 });
 
-rl.emit('repeat-questions-failed-attempt', () => {
+rl.on('repeat-questions-failed-attempt', () => {
   nurseOptions();
 });
 

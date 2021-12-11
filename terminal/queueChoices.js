@@ -1,21 +1,32 @@
-'use strict'
+'use strict';
+
+const path = require('path');
+
+const dotenvAbsolutePath = path.join(__dirname, '../.env');
+
+const dotenv = require('dotenv').config({
+  path: dotenvAbsolutePath
+});
+if (dotenv.error) {
+  throw dotenv.error;
+}
 
 const { PatientInfo, ptData } = require('./PatientInfo');
 
 const queueChoices = (choice) => {
 
   if (choice.trim() === '1') {
-    ptData['topic'] = 'arn:aws:sns:us-west-2:452365260800:Red.fifo'
+    ptData['topic'] = process.env.SNS_TOPIC_RED
     let ptInfo = new PatientInfo(ptData);
     rl.emit('save-pt-info', ptInfo);
   }
   else if (choice.trim() === '2') {
-    ptData['topic'] = 'arn:aws:sns:us-west-2:452365260800:Yellow.fifo'
+    ptData['topic'] = process.env.SNS_TOPIC_YELLOW
     let ptInfo = new PatientInfo(ptData);
     rl.emit('save-pt-info', ptInfo);
   }
   else if (choice.trim() === '3') {
-    ptData['topic'] = 'arn:aws:sns:us-west-2:452365260800:Green.fifo'
+    ptData['topic'] = process.env.SNS_TOPIC_GREEN
     let ptInfo = new PatientInfo(ptData);
     rl.emit('save-pt-info', ptInfo);
   }
