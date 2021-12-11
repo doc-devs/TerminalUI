@@ -3,7 +3,7 @@
 const axios = require('axios');
 const getUserCredentials = require('./getUserCredentials');
 const { nurseQuestions } = require('./nurseQuestions');
-const welcome2 = require('./welcome');
+const { doctorEntry } = require('./doctor');
 
 function signIn(obj) {
   console.log('\nfetching credentials ...')
@@ -18,9 +18,12 @@ function signIn(obj) {
   })
     .then(function (response) {
 
-      if (response.data) {
+      if (response.data.user.jobDescription === 'nurse') {
         console.log(`\nLogin Successful. \nYou're signed in as: ${response.data.user.jobDescription}\n`)
         nurseQuestions()
+      } else if (response.data.user.jobDescription === 'doctor') {
+        console.log(`\nLogin Successful. \nYou're signed in as: ${response.data.user.jobDescription}\n`)
+        doctorEntry();
       }
       else {
         console.log('Invalid login. Try again.')
@@ -46,10 +49,12 @@ function signUp(obj) {
     },
   })
     .then(function (response) {
-
-      if (response.data) {
-        console.log(`\n Login Successful. You're signed in as: ${response.data.user.jobDescription}\n`)
+      if (response.data.user.jobDescription === 'nurse') {
+        console.log(`\n Registration Successful. You're signed in as: ${response.data.user.jobDescription}\n`)
         nurseQuestions()
+      } else if (response.data.user.jobDescription === 'doctor') {
+        console.log(`\nRegistration Successful. \nYou're signed in as: ${response.data.user.jobDescription}\n`)
+        doctorEntry();
       }
       else return '\nError singing up\n'
     });
