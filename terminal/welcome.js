@@ -15,7 +15,7 @@ const welcome = () => {
       getUserCredentials();
     } else if (data === '2') {
       createUserCredentials();
-    }else if(data === '3'){
+    } else if (data === '3') {
       console.log('\n Thank You For using Icare, Goodbye...for now >:|')
       rl.close()
     } else {
@@ -27,6 +27,10 @@ const welcome = () => {
   })
 
 }
+
+rl.on('welcome', () => {
+  welcome();
+});
 
 module.exports = { welcome }
 
