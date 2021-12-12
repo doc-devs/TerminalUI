@@ -1,7 +1,6 @@
 'use strict'
 
 const axios = require('axios');
-const getUserCredentials = require('./getUserCredentials');
 const { nurseQuestions } = require('./nurseQuestions');
 const { doctorEntry } = require('./doctor');
 
@@ -10,6 +9,7 @@ function signIn(obj) {
   axios({
     method: 'post',
     url: 'https://ii-care.herokuapp.com/signin',
+    // url: 'http://localhost:3000/signin',
     responseType: 'json',
     auth: {
       username: obj['username'],
@@ -17,21 +17,18 @@ function signIn(obj) {
     },
   })
     .then(function (response) {
-
+      // console.log('**', response);
       if (response.data.user.jobDescription === 'nurse') {
-        console.log(`\nLogin Successful. \nYou're signed in as: ${response.data.user.jobDescription}\n`)
+        console.log(`\nLogin Successful. \nWelcome back ${response.data.user.username}! \nYou're signed in as: ${response.data.user.jobDescription}\n`)
         nurseQuestions()
       } else if (response.data.user.jobDescription === 'doctor') {
-        console.log(`\nLogin Successful. \nYou're signed in as: ${response.data.user.jobDescription}\n`)
+        console.log(`\nLogin Successful. \nWelcome back ${response.data.user.username}! \nYou're signed in as: ${response.data.user.jobDescription}\n`)
         doctorEntry();
-      }
-      else {
-        console.log('Invalid login. Try again.')
-        getUserCredentials()
       }
     })
     .catch(e => {
-      console.log(e)
+      console.log(e.response.data)
+      rl.emit('invalid-login');
     })
 }
 
@@ -40,6 +37,7 @@ function signUp(obj) {
   axios({
     method: 'post',
     url: 'https://ii-care.herokuapp.com/signup',
+    // url: 'http://localhost:3000/signup',
     responseType: 'json',
     data: {
       username: obj['username'],
@@ -50,15 +48,21 @@ function signUp(obj) {
   })
     .then(function (response) {
       if (response.data.user.jobDescription === 'nurse') {
-        console.log(`\n Registration Successful. You're signed in as: ${response.data.user.jobDescription}\n`)
-        nurseQuestions()
+        console.log(`\n Registration Successful. You're signed up as: ${response.data.user.jobDescription}\n`)
+        rl.emit('welcome');
       } else if (response.data.user.jobDescription === 'doctor') {
-        console.log(`\nRegistration Successful. \nYou're signed in as: ${response.data.user.jobDescription}\n`)
-        doctorEntry();
+        console.log(`\nRegistration Successful. \nYou're signed up as: ${response.data.user.jobDescription}\n`)
+        rl.emit('welcome');
       }
-      else return '\nError singing up\n'
+    })
+    .catch((e) => {
+      if (e.response.status === 409) {
+        console.log(e.response.data);
+        rl.emit('bad-username');
+      } else {
+        console.log(e);
+      }
     });
-
 }
 
 module.exports = { signIn, signUp }

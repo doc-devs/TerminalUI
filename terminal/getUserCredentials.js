@@ -14,4 +14,8 @@ async function getUserCredentials() {
   });
 }
 
+rl.on('invalid-login', () => {
+  getUserCredentials();
+});
+
 module.exports = getUserCredentials;

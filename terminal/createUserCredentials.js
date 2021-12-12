@@ -2,8 +2,9 @@
 
 const { signUp } = require('./axiosCalls.js')
 
+let userData = { role: 'admin' };
+
 async function createUserCredentials() {
-  let userData = { role: 'admin' };
 
   rl.question('\nCreate a username\n', (answer) => {
     userData['username'] = answer;
@@ -34,5 +35,9 @@ async function createUserCredentials() {
     })
   })
 }
+
+rl.on('bad-username', () => {
+  createUserCredentials();
+});
 
 module.exports = createUserCredentials;
