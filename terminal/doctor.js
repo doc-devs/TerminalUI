@@ -1,100 +1,108 @@
 'use strict';
 
+const chalk = require('chalk');
 const { Consumer } = require('sqs-consumer');
 
+// ============== message handler ========= //
+
 const handler = (message) => {
-  let patient = JSON.parse(message.Body);
-  console.log(JSON.parse(patient.Message));
+  let patientRaw = JSON.parse(message.Body);
+  let patient= JSON.parse(patientRaw.Message);
+  console.log(chalk.magenta('\nYou are assigned the following patient:\n'), patient);
 }
 
+// ========= subscriptions to queues =========//
+
 const redApp = Consumer.create({
-  queueUrl: 'https://sqs.us-west-2.amazonaws.com/452365260800/RedQueue.fifo',
+  queueUrl: process.env.SQS_URL_RED,
   handleMessage: handler,
-  waitTimeSeconds: 3,
+  waitTimeSeconds: 2,
 });
 
 const yellowApp = Consumer.create({
-  queueUrl: 'https://sqs.us-west-2.amazonaws.com/452365260800/YellowQueue.fifo',
+  queueUrl: process.env.SQS_URL_YELLOW,
   handleMessage: handler,
-  waitTimeSeconds: 3,
+  waitTimeSeconds: 2,
 });
 
 const greenApp = Consumer.create({
-  queueUrl: 'https://sqs.us-west-2.amazonaws.com/452365260800/GreenQueue.fifo',
+  queueUrl: process.env.SQS_URL_GREEN,
   handleMessage: handler,
-  waitTimeSeconds: 3,
+  waitTimeSeconds: 2,
 });
+// ============= queue pull ==================== //
 
 let queuePull = () => {
   redApp.start();
+  console.log(`\nChecking ${chalk.redBright('RED')} queue...`)
 }
+
+// ========== listeners for message received ============ //
 
 redApp.on('message_processed', (message) => {
   redApp.stop();
-  rl.question('Are you ready to take the next patient?\n', (answer) => {
-    if (answer === 'y') {
-      queuePull();
-    } else {
-      console.log('Only acceptable answers are y or n');
-      redApp.emit('message_processed');
-    }
-  });
+  nextPatient();
 });
 
 yellowApp.on('message_processed', (message) => {
   yellowApp.stop();
-  rl.question('Are you ready to take the next patient?\n', (answer) => {
-    if (answer === 'y') {
-      queuePull();
-    } else {
-      console.log('Only acceptable answers are y or n');
-      yellowApp.emit('message_processed');
-    }
-  });
+  nextPatient();
 });
 
 greenApp.on('message_processed', (message) => {
   greenApp.stop();
-  rl.question('Are you ready to take the next patient?\n', (answer) => {
-    if (answer === 'y') {
-      queuePull();
-    } else {
-      console.log('Only acceptable answers are y or n');
-      greenApp.emit('message_processed');
-    }
-  });
+  nextPatient();
 });
+
+// ========= listeners for empty queues ========== //
 
 redApp.on('empty', () => {
   redApp.stop();
-  console.log('Red queue empty\nFetching yellow queue...');
+  console.log(`\n${chalk.redBright('RED')} ${chalk.grey('queue is empty')}.\n\nChecking ${chalk.yellow('YELLOW')} queue...`);
   yellowApp.start();
 });
 yellowApp.on('empty', () => {
   yellowApp.stop();
-  console.log('Yellow queue empty\nFetching green queue...');
+  console.log(`\n${chalk.yellow('YELLOW')} ${chalk.grey('queue is empty')}.\n\nChecking ${chalk.green('GREEN')} queue...`);
   greenApp.start();
 });
 greenApp.on('empty', () => {
   greenApp.stop();
-  console.log('Patient list empty');
+  console.log(chalk.green('All patient queues are empty\n'));
   doctorEntry();
 });
 
+// ========== doctor entry function ========== //
+
 function doctorEntry() {
-  rl.question('\nSelect an option\n\n[1] - Begin seeing patients\n[2] - Exit\n\n', (answer) => {
+  rl.question(`${chalk.blueBright('\nSelect an option')}\n\n[1] - Begin seeing patients\n[2] - Exit\n\n`, (answer) => {
     if (answer === '1') {
-      rl.question('Hello, press enter whenever you are ready to take the next patient', (answer) => {
+      rl.question(chalk.blueBright('\nPress enter when you are ready to take the next patient\n'), (answer) => {
         // console.log('*', answer);
         queuePull();
       });
     } else if (answer === '2') {
       rl.close();
-      console.log('Goodbye from iCare');
+      console.log(chalk.cyan.bold('\nYou are signed off. Thank you for using iCare!\n\n'));
     } else {
-      console.log('\nInvalid input. Please choose a number and press ENTER.\n');
+      console.log(chalk.redBright(`\nInvalid input. Please choose a number and press ${chalk.white('ENTER')}.\n`));
     }
   });
 };
+
+function nextPatient (){
+  rl.question(chalk.blueBright(`\nWould you like to move on to the next patient in the queue? ${chalk.white('[Y/N]')}\n`), (answer) => {
+    if (answer.toLowerCase() === 'y') {
+      queuePull();
+    } else if (answer.toLowerCase() === 'n') {
+      doctorEntry();
+    }
+    else {
+      console.log(chalk.redBright(`\nOnly acceptable answers are ${chalk.white('Y')} or ${chalk.white('N')}`));
+      redApp.emit('message_processed');
+    }
+  });
+}
+
 
 module.exports = { doctorEntry }

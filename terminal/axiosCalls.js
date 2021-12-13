@@ -3,13 +3,15 @@
 const axios = require('axios');
 const { nurseQuestions } = require('./nurseQuestions');
 const { doctorEntry } = require('./doctor');
+const { ptData } = require('./PatientInfo');
+const server = process.env.SERVER_URL || 'http://localhost:3000';
+// 'https://ii-care.herokuapp.com'
 
 function signIn(obj) {
-  console.log('\nfetching credentials ...')
+  console.log(chalk.grey('\nFetching credentials ...\n'))
   axios({
     method: 'post',
-    url: 'https://ii-care.herokuapp.com/signin',
-    // url: 'http://localhost:3000/signin',
+    url: `${server}/signin`, 
     responseType: 'json',
     auth: {
       username: obj['username'],
@@ -17,27 +19,29 @@ function signIn(obj) {
     },
   })
     .then(function (response) {
-      // console.log('**', response);
-      if (response.data.user.jobDescription === 'nurse') {
-        console.log(`\nLogin Successful. \nWelcome back ${response.data.user.username}! \nYou're signed in as: ${response.data.user.jobDescription}\n`)
+
+      console.log(chalk.cyanBright(`Successfully logged in as a: ${chalk.white(response.data.user.jobDescription)} \nWelcome back, user ${chalk.white(response.data.user.username)}!\n`));
+
+      
+      if (response.data.user.jobDescription === 'nurse') {        
+        ptData['screenedBy'] = response.data.user.username;
         nurseQuestions()
-      } else if (response.data.user.jobDescription === 'doctor') {
-        console.log(`\nLogin Successful. \nWelcome back ${response.data.user.username}! \nYou're signed in as: ${response.data.user.jobDescription}\n`)
+      }
+      else if (response.data.user.jobDescription === 'doctor') {
         doctorEntry();
       }
     })
     .catch(e => {
-      console.log(e.response.data)
-      rl.emit('invalid-login');
+      console.log(chalk.red(e.response.data))
+      rl.emit('welcome');
     })
 }
 
 function signUp(obj) {
-  console.log('creating credentials ...')
+  console.log(chalk.grey('\ncreating credentials ...\n'))
   axios({
     method: 'post',
-    url: 'https://ii-care.herokuapp.com/signup',
-    // url: 'http://localhost:3000/signup',
+    url: `${server}/signup`,
     responseType: 'json',
     data: {
       username: obj['username'],
@@ -47,18 +51,13 @@ function signUp(obj) {
     },
   })
     .then(function (response) {
-      if (response.data.user.jobDescription === 'nurse') {
-        console.log(`\n Registration Successful. You're signed up as: ${response.data.user.jobDescription}\n`)
-        rl.emit('welcome');
-      } else if (response.data.user.jobDescription === 'doctor') {
-        console.log(`\nRegistration Successful. \nYou're signed up as: ${response.data.user.jobDescription}\n`)
-        rl.emit('welcome');
-      }
+      console.log(chalk.cyanBright(`Registration is successful. You're signed up as: ${chalk.white(response.data.user.jobDescription)}\n`));
+      rl.emit('welcome');
     })
     .catch((e) => {
       if (e.response.status === 409) {
-        console.log(e.response.data);
-        rl.emit('bad-username');
+        console.log(chalk.red(e.response.data));
+        rl.emit('welcome');
       } else {
         console.log(e);
       }
