@@ -5,17 +5,13 @@ const { signIn } = require('./axiosCalls.js')
 async function getUserCredentials() {
   let userData = {}
 
-  rl.question('What is your USERNAME?\n', (answer) => {
+  rl.question(chalk.blueBright('\nWhat is your USERNAME?\n\n'), (answer) => {
     userData['username'] = answer;
-    rl.question('What is your PASSWORD?\n', async (answer) => {
+    rl.question(chalk.blueBright('\nWhat is your PASSWORD?\n\n'), async (answer) => {
       userData['password'] = answer; 
       signIn(userData)
     });
   });
 }
-
-rl.on('invalid-login', () => {
-  getUserCredentials();
-});
 
 module.exports = getUserCredentials;

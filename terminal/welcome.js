@@ -3,11 +3,11 @@
 const getUserCredentials = require('./getUserCredentials');
 const createUserCredentials = require('./createUserCredentials');
 
-console.log('\n\x1b[47m\x1b[31m  Welcome to iCare Queue Management System  \x1b[0m')
-
 const welcome = () => {
+  console.log(chalk.blueBright(`\nSelect an option and press ${chalk.white('Enter')}`));
+
   new Promise((resolve) => {
-    rl.question('\nPress 1 or 2 and then Enter to access iCare\nOr press 3 to exit \n\n[1] - sign in\n[2] - sign up\n[3] - exit\n', (answer) => {
+    rl.question('\n[1] - sign in\n[2] - sign up\n[3] - exit\n\n', (answer) => {
       resolve(answer);
     })
   }).then((data) => {
@@ -16,16 +16,15 @@ const welcome = () => {
     } else if (data === '2') {
       createUserCredentials();
     } else if (data === '3') {
-      console.log('\n Thank You For using Icare, Goodbye...for now >:|')
+      console.log(chalk.cyan.bold('\nYou are signed off. Thank you for using iCare!\n\n'))
       rl.close()
     } else {
-      console.log('\nInvalid input. Please choose a number and press ENTER.\n')
+      console.log(chalk.redBright(`\nInvalid input. Please choose a number and press ${chalk.white('ENTER')}.\n`))
       welcome()
     }
   }).catch((e) => {
     console.log(e)
   })
-
 }
 
 rl.on('welcome', () => {

@@ -7,26 +7,31 @@ const { ptData } = require('./PatientInfo');
 
 const nurseQuestions = () => {
 
-  rl.question(`\nWhat is the patient's name?\n`, (answer) => {
+  rl.question(chalk.blueBright(`\nEnter the patient's name:\n`), (answer) => {
     ptData['name'] = answer;
 
-    rl.question(`\nWhat is patient's age?\n`, (answer) => {
+    rl.question(chalk.blueBright(`\nEnter the patient's age:\n`), (answer) => {
       ptData['age'] = answer;
 
-      rl.question('\nReason for visit?\n', (answer) => {
+      rl.question(chalk.blueBright('\nReason for a visit / chief complaint:\n'), (answer) => {
         ptData['symptoms'] = answer;
 
-        rl.question('\nchoose a queue: \n [1] - Red \n [2] - Yellow \n [3] - Green \n', queueChoices)
+        rl.question(chalk.blueBright(`\nChoose a queue: \n ${chalk.white(`[1] - Red (High priority) \n [2] - Yellow (Medium priority) \n [3] - Green (Low priority) \n\n`)}`), queueChoices)
       });
     });
   });
 
 }
 
+let topic;
 rl.on('save-pt-info', (info) => {
+  topic = info.topic;
+  delete info.topic;
+  console.log();
   console.log(info);
-  if (info.topic) {
-    publish(info.topic, info)
+
+  if (topic) {
+    publish(topic, info)
   } else {
     throw new Error('wrong queue picked!')
   }

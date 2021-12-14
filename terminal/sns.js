@@ -30,22 +30,18 @@ const publish = async (topic, ptInfo) => {
 
   await sns.publish(payload).promise()
     .then(() => {
-      console.log('\nPatient added successfully\n');
+      console.log(chalk.cyanBright(`\nPatient was successfully added to ${ptInfo.queue} queue\n`));
       rl.emit('repeat-questions');
     })
     .catch((e) => {
-      console.log('Could not add patient, please try again')
-      rl.emit('repeat-questions-failed-attempt');
+      console.log(chalk.red('Could not add patient, please try again'))
+      rl.emit('repeat-questions');
       console.error(e)
     });
 
 }
 
 rl.on('repeat-questions', () => {
-  nurseOptions();
-});
-
-rl.on('repeat-questions-failed-attempt', () => {
   nurseOptions();
 });
 

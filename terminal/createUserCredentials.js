@@ -6,20 +6,20 @@ let userData = { role: 'admin' };
 
 async function createUserCredentials() {
 
-  rl.question('\nCreate a username\n', (answer) => {
+  rl.question(chalk.blueBright('\nCreate a username\n\n'), (answer) => {
     userData['username'] = answer;
     rl.emit('question2')
   })
 
   rl.once('question2', () => {
-    rl.question('\nCreate a password\n', (answer) => {
+    rl.question(chalk.blueBright('\nCreate a password\n\n'), (answer) => {
       userData['password'] = answer;
       rl.emit('question3');
     })
   })
 
   rl.on('question3', () => {
-    rl.question('\nPick your job description:\n[1] - Nurse\n[2] - Doctor\n', (answer) => {
+    rl.question(chalk.blueBright(`\nPick your job description:\n ${chalk.white(`\n[1] - Nurse\n[2] - Doctor\n\n`)}`), (answer) => {
       if (answer === '1') {
         userData['jobDescription'] = 'nurse';
         signUp(userData);
@@ -35,9 +35,5 @@ async function createUserCredentials() {
     })
   })
 }
-
-rl.on('bad-username', () => {
-  createUserCredentials();
-});
 
 module.exports = createUserCredentials;
