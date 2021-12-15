@@ -36,7 +36,7 @@ yellowApp.on('empty', () => {
 });
 greenApp.on('empty', () => {
   greenApp.stop();
-  console.log(chalk.green('All patient queues are empty\n'));
+  console.log(chalk.green('\nAll patient queues are empty\n'));
   rl.emit('doctorEntry');
 });
 
