@@ -1,16 +1,5 @@
 'use strict';
 
-const path = require('path');
-
-const dotenvAbsolutePath = path.join(__dirname, '../../.env');
-
-const dotenv = require('dotenv').config({
-  path: dotenvAbsolutePath
-});
-if (dotenv.error) {
-  throw dotenv.error;
-}
-
 const { PatientInfo, ptData } = require('./PatientInfo');
 
 const queueChoices = (choice) => {

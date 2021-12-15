@@ -1,12 +1,4 @@
-<h1 align="center">
-
-    ██╗ ██████╗ █████╗ ██████╗ ███████╗
-    ██║██╔════╝██╔══██╗██╔══██╗██╔════╝
-    ██║██║     ███████║██████╔╝█████╗
-    ██║██║     ██╔══██║██╔══██╗██╔══╝
-    ██║╚██████╗██║  ██║██║  ██║███████╗
-    ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
-</h1>
+<h1 align="center">Welcome to iCare</h1>
 <p>
   <a href="https://www.npmjs.com/package/server" target="_blank">
     <img alt="Version" src="https://img.shields.io/npm/v/server.svg">
@@ -16,15 +8,22 @@
   </a>
 </p>
 
+## Description
+
+**iCare** is an app designed to manage the flow of walk-in patients in an urgent care center. A triage nurse can assign walk-in patients into one of the three queues (red, yellow or green), based on severity of their symptoms. Providers will also use the same app to attend to patients by grabbing a next patient from the queue with a highest priority. So, providers wil attend to all of the red queue patients first, before being assigned to patients from lower queues.
+
+The app is scalable and can be used by multiple triage personnel and providers at the same time.
+
 ## Usage
 
-1. Clone the repository TerminalUI to your local machine
-2. Run ``` npm i ``` to install dependencies
-3. create ```.env``` file and copy variable names from ```sample.env```. Then provide your own values
-4. run ``` pkg . ``` to compile the executables for Windows, macOS or Linux
-5. double click on a created file to run the app
-
-
+1. Create AWS account, and create three SNS FIFO topics (red, yellow, green) and three SQS FIFO queues (red, yellow, green). Subscribe SQS queues to corresponding SNS topics (red to red, etc).
+2. Clone down iCare repo, and deploy it to Heroku.
+3. Clone the repository TerminalUI to your local machine.
+4. Run ``` npm i ``` to install dependencies
+5. Create ```.env``` file and copy variable names from ```sample.env```. Then provide your own values for the env variables. (Heroku deployed link, AWS access keys, three SNS topic arns and three SQS http urls, and AWS region)  
+6. Run ``` pkg . ``` to compile the executables for Windows, macOS or Linux
+7. For Windows, double click on a created file with .exe extension to run the app
+8. For macOs/Linus, turn the file into Unix executable by using ```chmod +x /path/file-name``` in the Terminal, then double click the app.
 
 ## Run tests
 

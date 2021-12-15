@@ -5,7 +5,6 @@ const { nurseQuestions } = require('./nurse/nurseQuestions');
 const { doctorEntry } = require('./doctor/doctor');
 const { ptData } = require('./nurse/PatientInfo');
 const server = process.env.SERVER_URL || 'http://localhost:3000';
-// 'https://ii-care.herokuapp.com'
 
 function signIn(obj) {
   console.log(chalk.grey('\nFetching credentials ...\n'))
