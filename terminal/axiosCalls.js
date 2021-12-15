@@ -20,8 +20,6 @@ function signIn(obj) {
   })
     .then(function (response) {
 
-      console.log('******Response', response);
-
       console.log(chalk.cyanBright(`Successfully logged in as a: ${chalk.white(response.data.user.jobDescription)} \nWelcome back, user ${chalk.white(response.data.user.username)}!\n`));      
       if (response.data.user.jobDescription === 'nurse') {        
         ptData['screenedBy'] = response.data.user.username;
