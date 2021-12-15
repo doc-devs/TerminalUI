@@ -2,11 +2,9 @@
 
 const publish = require('./sns');
 const queueChoices = require('./queueChoices');
-
 const { ptData } = require('./PatientInfo');
 
 const nurseQuestions = () => {
-
   rl.question(chalk.blueBright(`\nEnter the patient's name:\n`), (answer) => {
     ptData['name'] = answer;
 
@@ -20,7 +18,6 @@ const nurseQuestions = () => {
       });
     });
   });
-
 }
 
 let topic;
