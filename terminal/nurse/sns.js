@@ -1,7 +1,7 @@
 'use strict';
 const path = require('path');
 
-const dotenvAbsolutePath = path.join(__dirname, '../.env');
+const dotenvAbsolutePath = path.join(__dirname, '../../.env');
 
 const dotenv = require('dotenv').config({
   path: dotenvAbsolutePath

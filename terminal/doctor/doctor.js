@@ -1,41 +1,9 @@
 'use strict';
 
 const chalk = require('chalk');
-const { Consumer } = require('sqs-consumer');
-
-// ============== message handler ========= //
-
-const handler = (message) => {
-  let patientRaw = JSON.parse(message.Body);
-  let patient= JSON.parse(patientRaw.Message);
-  console.log(chalk.magenta('\nYou are assigned the following patient:\n'), patient);
-}
-
-// ========= subscriptions to queues =========//
-
-const redApp = Consumer.create({
-  queueUrl: process.env.SQS_URL_RED,
-  handleMessage: handler,
-  waitTimeSeconds: 2,
-});
-
-const yellowApp = Consumer.create({
-  queueUrl: process.env.SQS_URL_YELLOW,
-  handleMessage: handler,
-  waitTimeSeconds: 2,
-});
-
-const greenApp = Consumer.create({
-  queueUrl: process.env.SQS_URL_GREEN,
-  handleMessage: handler,
-  waitTimeSeconds: 2,
-});
-// ============= queue pull ==================== //
-
-let queuePull = () => {
-  redApp.start();
-  console.log(`\nChecking ${chalk.redBright('RED')} queue...`)
-}
+const nextPatient = require('./nextPatient');
+const queuePull = require('./queuePull');
+const {redApp, yellowApp, greenApp} = require('./subscriptions');
 
 // ========== listeners for message received ============ //
 
@@ -69,10 +37,14 @@ yellowApp.on('empty', () => {
 greenApp.on('empty', () => {
   greenApp.stop();
   console.log(chalk.green('All patient queues are empty\n'));
-  doctorEntry();
+  rl.emit('doctorEntry');
 });
 
 // ========== doctor entry function ========== //
+
+rl.on('doctorEntry', ()=>{
+  doctorEntry();
+})
 
 function doctorEntry() {
   rl.question(`${chalk.blueBright('\nSelect an option')}\n\n[1] - Begin seeing patients\n[2] - Exit\n\n`, (answer) => {
@@ -89,20 +61,5 @@ function doctorEntry() {
     }
   });
 };
-
-function nextPatient (){
-  rl.question(chalk.blueBright(`\nWould you like to move on to the next patient in the queue? ${chalk.white('[Y/N]')}\n`), (answer) => {
-    if (answer.toLowerCase() === 'y') {
-      queuePull();
-    } else if (answer.toLowerCase() === 'n') {
-      doctorEntry();
-    }
-    else {
-      console.log(chalk.redBright(`\nOnly acceptable answers are ${chalk.white('Y')} or ${chalk.white('N')}`));
-      redApp.emit('message_processed');
-    }
-  });
-}
-
 
 module.exports = { doctorEntry }

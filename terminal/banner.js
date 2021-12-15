@@ -3,7 +3,7 @@
 const figlet = require('figlet');
 
 const banner = () => {
-  console.clear();
+  // console.clear();
   console.log(chalk.red('\n\n==========================================\n'))
   console.log(chalk.cyan(figlet.textSync(' iCare', {
     font: 'ANSI Shadow',

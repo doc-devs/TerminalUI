@@ -1,9 +1,9 @@
 'use strict'
 
 const axios = require('axios');
-const { nurseQuestions } = require('./nurseQuestions');
-const { doctorEntry } = require('./doctor');
-const { ptData } = require('./PatientInfo');
+const { nurseQuestions } = require('./nurse/nurseQuestions');
+const { doctorEntry } = require('./doctor/doctor');
+const { ptData } = require('./nurse/PatientInfo');
 const server = process.env.SERVER_URL || 'http://localhost:3000';
 // 'https://ii-care.herokuapp.com'
 
@@ -19,10 +19,7 @@ function signIn(obj) {
     },
   })
     .then(function (response) {
-
-      console.log(chalk.cyanBright(`Successfully logged in as a: ${chalk.white(response.data.user.jobDescription)} \nWelcome back, user ${chalk.white(response.data.user.username)}!\n`));
-
-      
+      console.log(chalk.cyanBright(`Successfully logged in as a: ${chalk.white(response.data.user.jobDescription)} \nWelcome back, user ${chalk.white(response.data.user.username)}!\n`));      
       if (response.data.user.jobDescription === 'nurse') {        
         ptData['screenedBy'] = response.data.user.username;
         nurseQuestions()
