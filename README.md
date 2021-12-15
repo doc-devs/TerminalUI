@@ -16,16 +16,10 @@
   </a>
 </p>
 
-## Install
-
-```sh
-npm install
-```
-
 ## Usage
 
-1. Clone the repository TerminalUI
-2. run ``` npm i ``` to install dependencies
+1. Clone the repository TerminalUI to your local machine
+2. Run ``` npm i ``` to install dependencies
 3. create ```.env``` file and copy variable names from ```sample.env```. Then provide your own values
 4. run ``` pkg . ``` to compile the executables for Windows, macOS or Linux
 5. double click on a created file to run the app

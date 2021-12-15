@@ -2,7 +2,7 @@ require('../index');
 
 const getUserCredentials = require('../terminal/getUserCredentials');
 
-describe('getUserCredentials', ()=>{
+xdescribe('getUserCredentials', ()=>{
 
   
   
