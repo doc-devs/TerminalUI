@@ -1,22 +1,7 @@
-<h1 align="center">Welcome to iCare</h1>
-==========================================
+<h1 align="center">Welcome to</h1>
 
-    ██╗ ██████╗ █████╗ ██████╗ ███████╗
-    ██║██╔════╝██╔══██╗██╔══██╗██╔════╝
-    ██║██║     ███████║██████╔╝█████╗
-    ██║██║     ██╔══██║██╔══██╗██╔══╝
-    ██║╚██████╗██║  ██║██║  ██║███████╗
-    ╚═╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝
+![logo](./images/logo.png)
 
-==========================================
-<p>
-  <a href="https://www.npmjs.com/package/server" target="_blank">
-    <img alt="Version" src="https://img.shields.io/npm/v/server.svg">
-  </a>
-  <a href="#" target="_blank">
-    <img alt="License: ISC" src="https://img.shields.io/badge/License-ISC-yellow.svg" />
-  </a>
-</p>
 
 ## Description
 
